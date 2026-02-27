@@ -4,6 +4,8 @@ import { useEffect, useRef, useState } from "react"
 
 type Phase = "intro" | "ready" | "rolling" | "result" | "playing"
 
+const BASE = process.env.NEXT_PUBLIC_BASE_PATH ?? ""
+
 export default function WaExperience() {
   const [phase, setPhase] = useState<Phase>("intro")
   const [displayPercent, setDisplayPercent] = useState(0)
@@ -47,10 +49,11 @@ export default function WaExperience() {
 
   const playWa = (value: number) => {
     if (!waVideoRef.current) return
-    waVideoRef.current.src =
+    waVideoRef.current.src = BASE + (
       value < 25 ? "/wa1.mp4" :
       value < 50 ? "/wa2.mp4" :
       value < 75 ? "/wa3.mp4" : "/wa4.mp4"
+    )
     setPhase("playing")
     waVideoRef.current.play().catch(() => {})
   }
@@ -243,7 +246,7 @@ export default function WaExperience() {
         {/* Opening video — muted so it can autoplay */}
         <video
           ref={openingRef}
-          src="/opening.mp4"
+          src={`${BASE}/opening.mp4`}
           className={`absolute inset-0 w-full h-full object-cover ${
             phase === "rolling" || phase === "result" || phase === "playing" ? "hidden" : ""
           }`}
